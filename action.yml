@@ -1,0 +1,53 @@
+name: 'Build and Publish Docker Image'
+description: 'Build and Publish Docker image, generating unique tag based on time and run_id'
+inputs:
+  docker-username: 
+    description: 'Service username for Docker'
+    required: true
+  docker-password: 
+    description: 'Service password for Docker'
+    required: true
+  docker-registry:
+    description: 'Docker image publish destination'
+    required: true
+  docker-space:
+    description: 'Space name in the docker registry'
+    required: true
+  image-name:
+    required: true
+outputs:
+  docker-tag:
+    description: "Generated Tag for Docker Image"
+    value: ${{ steps.meta.outputs.tags }}
+runs:
+  using: "composite"
+  steps:
+    -
+      name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    -
+      name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v3
+      with:
+        images: ${{ inputs.docker-registry }}/${{ inputs.docker-space }}/${{ inputs.image-name }}
+        tags: |
+          type=raw,value={{date 'YYYYMMDDTHHmmss'}}-${{github.run_id}}
+        labels: |
+          org.opencontainers.image.vendor=Kroger Technology
+    -
+      name: Login to Docker
+      uses: docker/login-action@v1
+      with:
+        registry: ${{ inputs.docker-registry }}
+        username: ${{ inputs.docker-username }}
+        password: ${{ inputs.docker-password }}    
+    -
+      name: Build and push
+      id: docker_build
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
