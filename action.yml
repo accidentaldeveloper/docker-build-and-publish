@@ -19,10 +19,10 @@ outputs:
   docker-tag:
     description: "Generated Tag for Docker Image"
     value: ${{ steps.meta.outputs.tags }}
-  image-version:
-    description: "Generated Version for Docker Image"
-    # value: ${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-    value: ${{ fromJSON(steps.meta.outputs.json.labels) }}
+  # image-version:
+  #   description: "Generated Version for Docker Image"
+  #   # value: ${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+  #   value: ${{ fromJSON(steps.meta.outputs.json.labels) }}
   meta-json:
     description: All data from metadata-action as JSON
     value: ${{ steps.meta.outputs.json }}
