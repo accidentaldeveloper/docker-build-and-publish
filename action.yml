@@ -28,7 +28,7 @@ outputs:
     value: ${{ steps.meta.outputs.json }}
   test:
     description: this is a test
-    value: ${{ steps.meta.outputs.json }}
+    value: ${{ steps.meta.outputs.json.labels }}
 runs:
   using: "composite"
   steps:
