@@ -21,9 +21,13 @@ outputs:
     value: ${{ steps.meta.outputs.tags }}
   image-version:
     description: "Generated Version for Docker Image"
-    value: ${{ (fromJSON(steps.meta.outputs.labels))['org.opencontainers.image.version'] }}
+    # value: ${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
+    value: ${{ steps.meta.outputs.labels }}
   meta-json:
     description: All data from metadata-action as JSON
+    value: ${{ steps.meta.outputs.json }}
+  test:
+    description: this is a test
     value: ${{ steps.meta.outputs.json }}
 runs:
   using: "composite"
