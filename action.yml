@@ -19,10 +19,9 @@ outputs:
   docker-tag:
     description: "Generated Tag for Docker Image"
     value: ${{ steps.meta.outputs.tags }}
-  # image-version:
-  #   description: "Generated Version for Docker Image"
-  #   # value: ${{ fromJSON(steps.meta.outputs.json).labels['org.opencontainers.image.version'] }}
-  #   value: ${{ fromJSON(steps.meta.outputs.json.labels) }}
+  image-version:
+    description: "Generated Version for Docker Image"
+    value: ${{ steps.get-image-version.outputs.result }}
   meta-json:
     description: All data from metadata-action as JSON
     value: ${{ steps.meta.outputs.json }}
@@ -58,3 +57,14 @@ runs:
         push: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+    - 
+      name: Get Docker Image Version
+      id: get-image-version
+      uses: actions/github-script@v5
+      env: 
+        metadata: ${{ steps.meta.outputs.json }}
+      with:
+        result-encoding: string
+        script: |
+          const { labels } = JSON.parse(process.env.metadata)
+          return labels["org.opencontainers.image.version"]
