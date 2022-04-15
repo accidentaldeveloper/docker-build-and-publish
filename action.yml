@@ -27,8 +27,8 @@ outputs:
     value: ${{ steps.meta.outputs.json }}
 runs:
   using: "composite"
-steps:
-     - 
+  steps:
+    - 
       name: 🐳 setup docker context for buildx
       id: buildx-context
       run: docker context create builders
