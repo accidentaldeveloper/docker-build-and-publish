@@ -30,6 +30,7 @@ runs:
   steps:
     - 
       name: 🐳 setup docker context for buildx
+      shell: sh
       id: buildx-context
       run: docker context create builders
     -
